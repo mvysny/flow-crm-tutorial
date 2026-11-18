@@ -1,8 +1,7 @@
 package com.example.application.data;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,9 +13,12 @@ import java.util.Random;
 /**
  * The demo data, generated from {@code benchmark.seed}: the same seed gives the same data, ids
  * included. 200 contacts with unique names, more than the grid renders at once.
+ *
+ * <p>Generated while the context starts, before the web server answers: the benchmark takes a
+ * page that answers as data that is complete.
  */
 @Component
-public class DemoData implements ApplicationRunner {
+public class DemoData {
 
     public static final List<String> STATUSES = List.of(
             "Imported lead", "Not contacted", "Contacted", "Customer", "Closed (lost)");
@@ -50,8 +52,8 @@ public class DemoData implements ApplicationRunner {
         this.seed = seed;
     }
 
-    @Override
-    public void run(ApplicationArguments args) {
+    @PostConstruct
+    void generate() {
         if (contacts.count() > 0) {
             return;
         }
