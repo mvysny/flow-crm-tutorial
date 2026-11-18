@@ -3,6 +3,7 @@ package com.example.application.views.list;
 import com.example.application.data.Company;
 import com.example.application.data.Contact;
 import com.example.application.data.Status;
+import com.example.application.benchmark.Attempts;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -58,8 +59,14 @@ public class ContactForm extends FormLayout {
     save.addClickShortcut(Key.ENTER);
     close.addClickShortcut(Key.ESCAPE);
 
-    save.addClickListener(event -> validateAndSave()); // <1>
-    delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean()))); // <2>
+    save.addClickListener(event -> {
+      Attempts.count("save");
+      validateAndSave(); // <1>
+    });
+    delete.addClickListener(event -> {
+      Attempts.count("delete");
+      fireEvent(new DeleteEvent(this, binder.getBean())); // <2>
+    });
     close.addClickListener(event -> fireEvent(new CloseEvent(this))); // <3>
 
     binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid())); // <4>
